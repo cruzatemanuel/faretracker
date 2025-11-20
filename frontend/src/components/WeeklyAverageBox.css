@@ -1,0 +1,33 @@
+.weekly-average-box {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+  border: 1px solid #fee2e2;
+}
+
+.weekly-average-box h2 {
+  color: #dc2626;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.average-display {
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  border-radius: 8px;
+  color: white;
+}
+
+.average-amount {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.average-period {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+

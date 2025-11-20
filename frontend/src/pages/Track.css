@@ -1,0 +1,52 @@
+.track-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.track-content {
+  flex: 1;
+  padding: 2rem;
+}
+
+.track-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-title {
+  text-align: center;
+  color: #dc2626;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.track-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .track-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.data-entry-box,
+.fare-result-box {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+  border: 1px solid #fee2e2;
+}
+
+.data-entry-box h2,
+.fare-result-box h2 {
+  color: #dc2626;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+

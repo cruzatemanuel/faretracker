@@ -1,0 +1,125 @@
+.fare-display {
+  display: flex;
+  flex-direction: column;
+}
+
+.fare-display h2 {
+  margin-bottom: 1.5rem;
+}
+
+.no-result {
+  text-align: center;
+  color: #991b1b;
+  padding: 2rem;
+  font-style: italic;
+}
+
+.fare-route-box {
+  border: 1px solid #fee2e2;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.route-box-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  background-color: #dc2626;
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.9rem;
+}
+
+.route-box-body {
+  background-color: #fff;
+}
+
+.route-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  padding: 0.85rem 1rem;
+  border-top: 1px solid #fee2e2;
+  align-items: center;
+}
+
+.route-row:first-of-type {
+  border-top: none;
+}
+
+.route-description {
+  color: #991b1b;
+  font-weight: 500;
+}
+
+.route-vehicle {
+  color: #dc2626;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+}
+
+.route-amount {
+  justify-self: end;
+  font-weight: 700;
+  color: #dc2626;
+}
+
+.no-segments {
+  padding: 1rem;
+  text-align: center;
+  color: #991b1b;
+}
+
+.trike-fare {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #fef2f2;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  border: 1px solid #fee2e2;
+  color: #991b1b;
+}
+
+.total-fare {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #dc2626;
+  color: white;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.save-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.save-btn:hover {
+  background-color: #b91c1c;
+}
+
+.save-message {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #fef2f2;
+  color: #991b1b;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 500;
+  border: 1px solid #fee2e2;
+}
+

@@ -1,0 +1,38 @@
+.stacking-navbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.stacking-nav-item {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 1.5rem;
+  background-color: rgba(176, 170, 170, 0.1);
+  text-decoration: none;
+  color: #000;
+  backdrop-filter: blur(16px);
+  transition: all 0.3s ease-in-out;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.stacking-nav-item:hover {
+  background-color: #000;
+  color: white;
+}
+
+.stacking-nav-item-logout {
+  background-color: rgba(153, 27, 27, 0.2);
+  color: #991b1b;
+}
+
+.stacking-nav-item-logout:hover {
+  background-color: #991b1b;
+  color: white;
+}
+

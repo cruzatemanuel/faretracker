@@ -1,0 +1,51 @@
+.home-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-content {
+  flex: 1;
+  padding: 0;
+}
+
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.about-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+  margin-top: 2rem;
+  border: 1px solid #fee2e2;
+}
+
+.about-section h3 {
+  color: #dc2626;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.about-section p {
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.about-section ul {
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.about-section li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
