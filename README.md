@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Fair Fares - Fare Data Management and Analysis System
 
 A full-stack web application for managing and analyzing transportation fare data across multiple districts.
@@ -207,3 +208,6 @@ The fare guide CSV should have the following columns:
 
 This project is for educational purposes.
 
+=======
+# faretracker
+>>>>>>> 085ec14e30ff7f788bd642c294d44aa8bfabee70
