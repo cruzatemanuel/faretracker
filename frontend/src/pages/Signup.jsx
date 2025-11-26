@@ -41,7 +41,7 @@ function Signup() {
   return (
     <div className="signup-container">
       <div className="signup-box">
-        <h1>Fair Fares</h1>
+        <h1>FairFares</h1>
         <h2>Sign Up</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">

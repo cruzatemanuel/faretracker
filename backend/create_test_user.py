@@ -3,12 +3,10 @@ Script to create a test user for development
 Run this after setting up the database
 """
 from sqlalchemy.orm import Session
-from app.database import SessionLocal, engine, Base
-from app.models import User
+from app import SessionLocal, User
 
 def create_test_user():
     """Create a test user"""
-    Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     
     try:

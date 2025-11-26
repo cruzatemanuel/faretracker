@@ -12,34 +12,26 @@ function Track() {
   const [formData, setFormData] = useState({
     district: 1,
     startLocation: '',
-    destination: 'BSU',
-    includeTrike: false
+    destination: '',
+    includeTrike: false,
+    startLocationError: '',
+    destinationError: ''
   })
   const [fareResult, setFareResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [saveMessage, setSaveMessage] = useState('')
-  const [locations, setLocations] = useState([])
-
-  useEffect(() => {
-    // Load available locations for the selected district based on the fare guide
-    const districtLocations = {
-      1: ['BSU', 'Balayan', 'Calaca', 'Calatagan', 'Lian', 'Nasugbu', 'Tuy', 'Taal', 'Lemery', 'Grand Terminal', 'Batangas City'],
-      2: ['BSU', 'Bauan', 'Lobo', 'Mabini', 'San Luis', 'San Pascual', 'Tingloy', 'Batangas City', 'Batangas City Port', 'Lemery'],
-      3: ['BSU', 'Sto. Tomas', 'Tanauan City', 'Agoncillo', 'Alitagtag', 'Balete', 'Cuenca', 'Laurel', 'Talisay', 'Malvar', 'Mataas na Kahoy', 'San Nicolas', 'Santa Teresita', 'Grand Terminal', 'Batangas City', 'Lipa City', 'Lemery'],
-      4: ['BSU', 'Ibaan', 'Padre Garcia', 'Rosario', 'San Jose', 'San Juan', 'Taysan', 'Batangas'],
-      5: ['BSU', 'Batangas City'],
-      6: ['BSU', 'Lipa City', 'Batangas City']
-    }
-    setLocations(districtLocations[formData.district] || [])
-  }, [formData.district])
 
   const handleFormChange = (field, value) => {
     setFormData(prev => {
       const newData = { ...prev, [field]: value }
-      // Auto-set destination to BSU if start location is BSU
-      if (field === 'startLocation' && value === 'BSU') {
-        newData.destination = 'BSU'
-      } else if (field === 'startLocation' && prev.startLocation === 'BSU') {
+      // Clear errors when user types
+      if (field === 'startLocation') {
+        newData.startLocationError = ''
+      } else if (field === 'destination') {
+        newData.destinationError = ''
+      }
+      // Auto-set destination to BSU if start location is BSU and destination is empty
+      if (field === 'startLocation' && value.toUpperCase() === 'BSU' && !prev.destination) {
         newData.destination = 'BSU'
       }
       return newData
@@ -49,23 +41,58 @@ function Track() {
   }
 
   const handleCalculate = async () => {
-    if (!formData.startLocation) {
-      alert('Please select a start location')
+    // Clear previous errors
+    setFormData(prev => ({
+      ...prev,
+      startLocationError: '',
+      destinationError: ''
+    }))
+
+    // Basic validation
+    if (!formData.startLocation.trim()) {
+      setFormData(prev => ({
+        ...prev,
+        startLocationError: 'Please enter a start location'
+      }))
       return
     }
+
+    const destination = formData.destination.trim() || 'BSU'
 
     setLoading(true)
     setSaveMessage('')
     try {
       const response = await api.post(`/fare/calculate?srcode=${user?.srcode}`, {
         district: formData.district,
-        start_location: formData.startLocation,
-        destination: formData.destination || 'BSU',
+        start_location: formData.startLocation.trim(),
+        destination: destination,
         include_trike: formData.includeTrike
       })
       setFareResult(response.data)
+      // Clear any errors on success
+      setFormData(prev => ({
+        ...prev,
+        startLocationError: '',
+        destinationError: ''
+      }))
     } catch (error) {
-      alert(error.response?.data?.detail || 'Error calculating fare')
+      const errorMessage = error.response?.data?.detail || 'Error calculating fare'
+      
+      // Parse error message to determine which field has the issue
+      if (errorMessage.includes('start location') || errorMessage.includes('Invalid start location')) {
+        setFormData(prev => ({
+          ...prev,
+          startLocationError: errorMessage
+        }))
+      } else if (errorMessage.includes('destination') || errorMessage.includes('Invalid destination')) {
+        setFormData(prev => ({
+          ...prev,
+          destinationError: errorMessage
+        }))
+      } else {
+        // General error - show in alert for now, could be improved
+        alert(errorMessage)
+      }
     } finally {
       setLoading(false)
     }
@@ -105,7 +132,6 @@ function Track() {
             <div className="data-entry-box">
               <DataEntryForm
                 formData={formData}
-                locations={locations}
                 onFormChange={handleFormChange}
                 onCalculate={handleCalculate}
                 loading={loading}

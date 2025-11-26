@@ -7,11 +7,11 @@ A full-stack web application for managing and analyzing transportation fare data
 - **Frontend**: React 18 with Vite
 - **Backend**: FastAPI (Python)
 - **Database**: MySQL (via SQLAlchemy)
-- **Authentication**: JWT (JSON Web Tokens)
+- **Authentication**: Simple password-based authentication
 
 ## Features
 
-✅ User Authentication (JWT-based login system)
+✅ User Authentication (Simple password-based login system)
 ✅ Home Page with navigation and about section
 ✅ Track Page for fare calculation and data entry
 ✅ Dashboard with user info, weekly averages, and fare history
@@ -25,21 +25,12 @@ A full-stack web application for managing and analyzing transportation fare data
 ```
 finalproject/
 ├── backend/
-│   ├── app/
-│   │   ├── __init__.py
-│   │   ├── main.py              # FastAPI application
-│   │   ├── database.py          # Database configuration
-│   │   ├── models.py            # SQLAlchemy models
-│   │   ├── schemas.py           # Pydantic schemas
-│   │   ├── auth.py              # Authentication logic
-│   │   ├── fare_calculator.py   # Fare calculation logic
-│   │   └── routers/
-│   │       ├── auth.py          # Authentication endpoints
-│   │       └── fare.py          # Fare management endpoints
+│   ├── app.py                   # Consolidated FastAPI application (all backend logic)
 │   ├── data/
 │   │   └── fare_guide.csv       # Fare guide data
 │   ├── requirements.txt
-│   └── seed_data.py             # Database seeding script
+│   ├── create_test_user.py      # Script to create test user
+│   └── seed_data.py             # (Deprecated - fare guide loaded from CSV at runtime)
 ├── frontend/
 │   ├── src/
 │   │   ├── components/          # Reusable components
@@ -82,24 +73,43 @@ finalproject/
    Create a `.env` file in the `backend` directory:
    ```env
    DATABASE_URL=mysql+pymysql://username:password@localhost:3306/fairfares
-   SECRET_KEY=your-secret-key-here-change-in-production
-   ALGORITHM=HS256
-   ACCESS_TOKEN_EXPIRE_MINUTES=30
    ```
 
-5. **Create MySQL database:**
+5. **Create MySQL database and tables:**
    ```sql
    CREATE DATABASE fairfares;
+   ```
+   
+   Then create the tables manually (the application does not auto-create tables):
+   ```sql
+   USE fairfares;
+   
+   CREATE TABLE user (
+       srcode VARCHAR(50) PRIMARY KEY,
+       name VARCHAR(255) NOT NULL,
+       college VARCHAR(255) NOT NULL,
+       password VARCHAR(255) NOT NULL,
+       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+   );
+   
+   CREATE TABLE user_fares (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       user_srcode VARCHAR(50) NOT NULL,
+       district INT NOT NULL,
+       start_location VARCHAR(255) NOT NULL,
+       destination VARCHAR(255) NOT NULL,
+       include_trike BOOLEAN DEFAULT FALSE,
+       total_fare FLOAT NOT NULL,
+       trike_fare FLOAT DEFAULT 0.0,
+       fare_details TEXT,
+       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+       FOREIGN KEY (user_srcode) REFERENCES user(srcode)
+   );
    ```
 
 6. **Run the application:**
    ```bash
-   uvicorn app.main:app --reload --port 8000
-   ```
-
-7. **Seed the database (optional):**
-   ```bash
-   python seed_data.py
+   uvicorn app:app --reload --port 8000
    ```
 
 ### Frontend Setup
@@ -125,7 +135,7 @@ The frontend will be available at `http://localhost:5173`
 
 ### Authentication
 - `POST /auth/signup` - Create a new user account
-- `POST /auth/login` - Login and get JWT token
+- `POST /auth/login` - Login with SRCODE and password
 - `GET /auth/me` - Get current user information
 
 ### Fare Management
@@ -156,10 +166,8 @@ The frontend will be available at `http://localhost:5173`
 
 ## Database Models
 
-- **User**: Stores user account information (SRCODE, name, department)
-- **FareRecord**: Stores fare calculation records
-- **Route**: Stores route information (district, start, destination)
-- **Segment**: Stores fare segments for routes
+- **user**: Stores user account information (srcode, name, college, password, created_at)
+- **user_fares**: Stores fare calculation records (id, user_srcode, district, start_location, destination, include_trike, total_fare, trike_fare, fare_details, created_at)
 
 ## Fare Guide CSV Format
 
@@ -173,10 +181,12 @@ The fare guide CSV should have the following columns:
 
 ## Development Notes
 
-- The fare calculator reads from `backend/data/fare_guide.csv`
-- JWT tokens are stored in localStorage on the frontend
-- All API requests require authentication except `/auth/login` and `/auth/signup`
+- The fare calculator reads from `backend/data/fare_guide.csv` at runtime
+- All backend logic is consolidated in a single `app.py` file for simplicity
+- Simple password-based authentication (no JWT or bcrypt)
+- All API requests require authentication via SRCODE query parameter
 - CORS is configured to allow requests from `localhost:5173` and `localhost:3000`
+- Database tables must be created manually - the application does not auto-create them
 
 ## Troubleshooting
 
@@ -187,10 +197,10 @@ The fare guide CSV should have the following columns:
 
 2. **CSV not found:**
    - Ensure `backend/data/fare_guide.csv` exists
-   - Check file path in `fare_calculator.py`
+   - Check file path in `app.py` (FareCalculator class)
 
 3. **CORS errors:**
-   - Verify backend CORS settings in `main.py`
+   - Verify backend CORS settings in `app.py`
    - Check frontend API base URL in `services/api.js`
 
 ## License

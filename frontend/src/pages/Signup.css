@@ -3,6 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: white;
 }
 
 .signup-box {
@@ -20,6 +21,7 @@
   color: #dc2626;
   margin-bottom: 0.5rem;
   font-size: 2rem;
+  font-family: futura;
 }
 
 .signup-box h2 {

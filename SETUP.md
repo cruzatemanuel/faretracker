@@ -49,17 +49,39 @@ EOF
 # Edit .env file with your MySQL credentials
 # Replace 'your_password' with your actual MySQL password
 
-# Initialize database tables (creates all tables automatically)
-# This happens automatically when you start the server, but you can also run:
-python -c "from app.database import engine, Base; from app.models import *; Base.metadata.create_all(bind=engine)"
+# Create database tables manually (the application does not auto-create tables)
+# Run this in MySQL:
+mysql -u root -p fairfares << EOF
+CREATE TABLE IF NOT EXISTS user (
+    srcode VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    college VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS user_fares (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_srcode VARCHAR(50) NOT NULL,
+    district INT NOT NULL,
+    start_location VARCHAR(255) NOT NULL,
+    destination VARCHAR(255) NOT NULL,
+    include_trike BOOLEAN DEFAULT FALSE,
+    total_fare FLOAT NOT NULL,
+    trike_fare FLOAT DEFAULT 0.0,
+    fare_details TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_srcode) REFERENCES user(srcode)
+);
+EOF
 
 # Start the backend server
-uvicorn app.main:app --reload --port 8000
+uvicorn app:app --reload --port 8000
 ```
 
 The backend will be available at `http://localhost:8000`
 
-**Note:** The first time you run the server, it will automatically create all database tables.
+**Note:** Database tables must be created manually before starting the server. The application does not auto-create tables.
 
 ### 3. Create Test User (Optional)
 
@@ -77,12 +99,9 @@ This creates a test user:
 - **Password**: test123
 - **College**: IT Department
 
-### 4. Seed Fare Guide Data (Optional)
+### 4. Fare Guide Data
 
-```bash
-# Still in backend directory with venv activated
-python seed_data.py
-```
+The fare guide is loaded directly from `backend/data/fare_guide.csv` at runtime. No database seeding is required.
 
 ### 5. Frontend Setup
 
@@ -165,7 +184,8 @@ The application uses **simplified authentication**:
 - Verify MySQL credentials in `.env`
 - Ensure database `fairfares` exists
 - Check MySQL service is running
-- Try recreating tables: Delete database and recreate, then restart server
+- Verify that both `user` and `user_fares` tables exist
+- Check table structure matches the schema in README.md
 
 ### CSV file not found
 - Ensure `backend/data/fare_guide.csv` exists
@@ -184,31 +204,31 @@ Once the backend is running, visit:
 
 ## Database Schema
 
-**Users Table:**
-- `srcode` (Primary Key) - String(50)
-- `name` - String(255)
-- `college` - String(255)
-- `password` - String(255) - Plain text
-- `created_at` - DateTime
+**user Table:**
+- `srcode` (Primary Key) - VARCHAR(50)
+- `name` - VARCHAR(255) NOT NULL
+- `college` - VARCHAR(255) NOT NULL
+- `password` - VARCHAR(255) NOT NULL (Plain text - no hashing)
+- `created_at` - DATETIME DEFAULT CURRENT_TIMESTAMP
 
-**Fare Records Table:**
-- `id` (Primary Key) - Integer
-- `user_srcode` (Foreign Key) - String(50)
-- `district` - Integer
-- `start_location` - String(255)
-- `destination` - String(255)
-- `include_trike` - Boolean
-- `total_fare` - Float
-- `trike_fare` - Float
-- `fare_details` - Text (JSON)
-- `created_at` - DateTime
+**user_fares Table:**
+- `id` (Primary Key) - INT AUTO_INCREMENT
+- `user_srcode` (Foreign Key) - VARCHAR(50) NOT NULL, REFERENCES user(srcode)
+- `district` - INT NOT NULL
+- `start_location` - VARCHAR(255) NOT NULL
+- `destination` - VARCHAR(255) NOT NULL
+- `include_trike` - BOOLEAN DEFAULT FALSE
+- `total_fare` - FLOAT NOT NULL
+- `trike_fare` - FLOAT DEFAULT 0.0
+- `fare_details` - TEXT (JSON string)
+- `created_at` - DATETIME DEFAULT CURRENT_TIMESTAMP
 
 ## Production Deployment Notes
 
 Before deploying to production:
 1. **IMPORTANT**: Implement proper password hashing (bcrypt)
 2. **IMPORTANT**: Use JWT or session tokens for authentication
-3. Update CORS origins in `backend/app/main.py`
+3. Update CORS origins in `backend/app.py`
 4. Use environment variables for all sensitive data
 5. Set up proper database backups
 6. Use HTTPS for all connections

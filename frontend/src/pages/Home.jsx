@@ -9,29 +9,25 @@ function Home() {
       <NavBar />
       <div className="home-content">
         <HeroSection />
-        
+
         <div className="home-container">
           <section className="about-section">
             <h3>About the Program</h3>
             <p>
-              Fair Fares is a comprehensive web application designed for efficient fare data 
-              management and analysis. This system allows users to track transportation fares 
-              across different districts, calculate route costs, and maintain a personal history 
-              of fare records.
+              The Fare Track System is a comprehensive web application designed exclusively for the students and faculty of Batangas State University. It provides a convenient and efficient way to record, track, and analyze daily fare expenses based on local routes and transportation options commonly used around the campus.
             </p>
             <p>
-              With Fair Fares, you can:
+              With the Fare Track System, users can:
             </p>
             <ul>
-              <li>Calculate fares for routes across multiple districts</li>
-              <li>Track your transportation expenses over time</li>
-              <li>View weekly averages and fare history</li>
-              <li>Manage your fare records with ease</li>
+              <li>Record daily fare expenses with ease</li>
+              <li>Track transportation spending across different districts and routes</li>
+              <li>Monitor weekly averages, spending trends, and fare history</li>
+              <li>Generate simple budgeting summaries for better financial management</li>
+              <li>Calculate fares for various transportation modes, including jeepneys, vans, taxis, and optional tricycle fares for more accurate route planning</li>
             </ul>
             <p>
-              The system supports fare calculations for various transportation modes including 
-              jeepneys, vans, and taxis, with optional trike fare calculations for enhanced 
-              route planning.
+            Developed by <b><i>Emanuel C. Cruzat</i></b> and <b><i>Crissele H. Deomampo</i></b>, the system aims to help the BatStateU community manage their transportation costs effectively through an organized and user-friendly platform.
             </p>
           </section>
         </div>

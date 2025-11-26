@@ -1,6 +1,6 @@
 import './DataEntryForm.css'
 
-function DataEntryForm({ formData, locations, onFormChange, onCalculate, loading }) {
+function DataEntryForm({ formData, onFormChange, onCalculate, loading }) {
   return (
     <div className="data-entry-form">
       <h2>Data Entry</h2>
@@ -22,17 +22,17 @@ function DataEntryForm({ formData, locations, onFormChange, onCalculate, loading
 
       <div className="form-group">
         <label htmlFor="startLocation">Start Location</label>
-        <select
+        <input
+          type="text"
           id="startLocation"
           value={formData.startLocation}
           onChange={(e) => onFormChange('startLocation', e.target.value)}
+          placeholder="Enter start location"
           required
-        >
-          <option value="">Select start location</option>
-          {locations.map(loc => (
-            <option key={loc} value={loc}>{loc}</option>
-          ))}
-        </select>
+        />
+        {formData.startLocationError && (
+          <span className="error-message">{formData.startLocationError}</span>
+        )}
       </div>
 
       <div className="form-group">
@@ -42,9 +42,11 @@ function DataEntryForm({ formData, locations, onFormChange, onCalculate, loading
           id="destination"
           value={formData.destination}
           onChange={(e) => onFormChange('destination', e.target.value)}
-          readOnly={formData.startLocation === 'BSU'}
-          placeholder="Auto-set to BSU"
+          placeholder="Enter destination (or leave empty for BSU)"
         />
+        {formData.destinationError && (
+          <span className="error-message">{formData.destinationError}</span>
+        )}
       </div>
 
       <div className="form-group checkbox-group">
@@ -61,7 +63,7 @@ function DataEntryForm({ formData, locations, onFormChange, onCalculate, loading
       <button
         type="button"
         onClick={onCalculate}
-        disabled={loading || !formData.startLocation}
+        disabled={loading || !formData.startLocation.trim()}
         className="calculate-btn"
       >
         {loading ? 'Calculating...' : 'Calculate Fare'}
