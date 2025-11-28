@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Fair Fares - Fare Data Management and Analysis System
 
 A full-stack web application for managing and analyzing transportation fare data across multiple districts.
